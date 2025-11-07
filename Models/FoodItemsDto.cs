@@ -1,18 +1,18 @@
 ﻿namespace FoodSaver.Models
 {
-    public class FoodItemsDto
+    public class FoodItemsCreateDto
     {
         public required string FoodName { get; set; }
         public category FoodCategory { get; set; }
-        public required DateTime FoodExpiryDate { get; set; }
+        public required DateOnly FoodExpiryDate { get; set; }
     }
 
-    public class FoodItemsUpdateDto
+    public class FoodItemsReadAndUpdateDto
     {
         public Guid FoodId { get; set; }
         public required string FoodName { get; set; }
         public category FoodCategory { get; set; }
-        public required DateTime FoodExpiryDate { get; set; }
+        public required DateOnly FoodExpiryDate { get; set; }
     }
 
     public class FoodItemsDeleteDto

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FoodSaver.Models
 {
@@ -10,7 +9,7 @@ namespace FoodSaver.Models
         public Guid FoodId { get; set; }
         public required string FoodName { get; set; }
         public category FoodCategory { get; set; }
-        public required DateTime FoodExpiryDate { get; set; }
+        public required DateOnly FoodExpiryDate { get; set; }
         public Guid UserId { get; set; }
     }
 }

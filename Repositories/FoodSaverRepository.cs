@@ -36,7 +36,7 @@ namespace FoodSaver.Repositories
             return existingFoodItem;
         }
 
-        public bool UpdateFoodItem(Guid foodid, string? foodname = null, category? foodcategory = null, DateTime? foodexpirydate = null)
+        public bool UpdateFoodItem(Guid foodid, string? foodname, category? foodcategory, DateOnly? foodexpirydate)
         {
             var existingFoodItem = GetByFoodId(foodid);
             if (existingFoodItem == null)
@@ -54,8 +54,9 @@ namespace FoodSaver.Repositories
             }
             if (foodexpirydate.HasValue)
             {
-                existingFoodItem.FoodExpiryDate = (DateTime) foodexpirydate;
+                existingFoodItem.FoodExpiryDate = (DateOnly) foodexpirydate;
             }
+            _context.SaveChanges();
             return true;
             
         }

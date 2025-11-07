@@ -13,7 +13,14 @@ builder.Services.AddDbContext<FoodSaverDbContext>(options =>
 builder.Services.AddScoped<IFoodSaverRepository, FoodSaverRepository>();
 builder.Services.AddScoped<IFoodSaverService, FoodSaverService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    //Allows the conversion of enum from numbers to the actual options text,
+    //as C# by default treats enum as numbers when converting to or from JSON.
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

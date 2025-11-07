@@ -18,7 +18,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpPost("CreateFoodItem")]
-        public ActionResult<Guid> CreateFoodItem([FromBody] FoodItemsDto foodItemsDto)
+        public ActionResult<Guid> CreateFoodItem([FromBody] FoodItemsCreateDto foodItemsDto)
         {
             if (foodItemsDto == null)
             {
@@ -30,7 +30,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpGet("GetAllFoodItems")]
-        public ActionResult<List<FoodItemsDto>> GetAllFoodItems()
+        public ActionResult<List<FoodItemsReadAndUpdateDto>> GetAllFoodItems()
         {
             var foodItems = _foodSaverService.GetAllFoodItems();
             if (foodItems.Count == 0)
@@ -41,7 +41,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpPut("UpdateFoodItem")]
-        public ActionResult<Boolean> UpdateFoodItem([FromBody] FoodItemsUpdateDto foodItemsUpdateDto)
+        public ActionResult<Boolean> UpdateFoodItem([FromBody] FoodItemsReadAndUpdateDto foodItemsUpdateDto)
         {
             if (foodItemsUpdateDto == null)
             {

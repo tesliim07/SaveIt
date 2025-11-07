@@ -14,9 +14,9 @@ namespace FoodSaver.Services
             _logger = logger;
         }
 
-        public Guid CreateFoodItem(FoodItemsDto foodItemsCreate)
+        public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate)
         {
-            var dto = new FoodItemsDto()
+            var dto = new FoodItemsCreateDto()
             {
                 FoodName = foodItemsCreate.FoodName,
                 FoodCategory = foodItemsCreate.FoodCategory,
@@ -33,14 +33,15 @@ namespace FoodSaver.Services
             return foodItemId;
         }
 
-        public List<FoodItemsDto> GetAllFoodItems()
+        public List<FoodItemsReadAndUpdateDto> GetAllFoodItems()
         {
             var allFoodItems = _repository.GetAllFoodItems();
-            var dtoList = new List<FoodItemsDto>();
+            var dtoList = new List<FoodItemsReadAndUpdateDto>();
             foreach (var foodItem in allFoodItems)
             {
-                dtoList.Add(new FoodItemsDto()
+                dtoList.Add(new FoodItemsReadAndUpdateDto()
                 {
+                    FoodId = foodItem.FoodId,
                     FoodName=foodItem.FoodName,
                     FoodCategory=foodItem.FoodCategory,
                     FoodExpiryDate=foodItem.FoodExpiryDate
@@ -49,7 +50,7 @@ namespace FoodSaver.Services
             return dtoList;
         }
 
-        public bool UpdateFoodItem(FoodItemsUpdateDto foodItem)
+        public bool UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem)
         {
             var isUpdateSuccessful = _repository.UpdateFoodItem(foodItem.FoodId, foodItem.FoodName, foodItem.FoodCategory, foodItem.FoodExpiryDate);
             if (isUpdateSuccessful == false)

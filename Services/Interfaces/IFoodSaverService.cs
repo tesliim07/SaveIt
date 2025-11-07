@@ -4,9 +4,9 @@ namespace FoodSaver.Services.Interfaces
 {
     public interface IFoodSaverService
     {
-        public Guid CreateFoodItem(FoodItemsDto foodItemsCreate);
-        public List<FoodItemsDto> GetAllFoodItems();
-        public bool UpdateFoodItem(FoodItemsUpdateDto foodItem);
+        public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate);
+        public List<FoodItemsReadAndUpdateDto> GetAllFoodItems();
+        public bool UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem);
         public bool DeleteFoodItem(FoodItemsDeleteDto foodItem);
     }
 }
