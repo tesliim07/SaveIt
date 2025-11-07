@@ -8,5 +8,6 @@ namespace FoodSaver.Services.Interfaces
         public List<FoodItemsReadAndUpdateDto> GetAllFoodItems();
         public bool UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem);
         public bool DeleteFoodItem(FoodItemsDeleteDto foodItem);
+        public void SendFoodExpiryReminder(int daysToExpiry);
     }
 }

@@ -69,5 +69,15 @@ namespace FoodSaver.Services
             }
             return isDeleteSuccessful;
         }
+
+        public void SendFoodExpiryReminder(int daysToExpiry)
+        {
+            var foodExpiryReminder = _repository.SendFoodExpiryReminder(daysToExpiry);
+            foreach (var item in foodExpiryReminder)
+            {
+                // Simulate sending a reminder (email, push notification, etc.)
+                _logger.LogInformation($"Reminder: '{item.FoodName}' expires on {item.FoodExpiryDate:d}");
+            }
+        }
     }
 }

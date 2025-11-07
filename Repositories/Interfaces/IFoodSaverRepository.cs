@@ -9,5 +9,6 @@ namespace FoodSaver.Repositories.Interfaces
         public FoodItems GetByFoodId(Guid foodid);
         public bool UpdateFoodItem(Guid foodid, string? foodname = null, category? foodcategory = null, DateOnly? foodexpirydate = null);
         public bool DeleteFoodItem(Guid foodid);
+        public List<FoodItems> SendFoodExpiryReminder(int daysToExpiry);
     }
 }

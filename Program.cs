@@ -3,9 +3,22 @@ using FoodSaver.Repositories;
 using FoodSaver.Repositories.Interfaces;
 using FoodSaver.Services;
 using FoodSaver.Services.Interfaces;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Add Hangfire configuration
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(
+    options =>
+    {
+        options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+    ));
+
+//Add Hangfire server to process jobs
+builder.Services.AddHangfireServer();
 
 // Add services to the container.
 builder.Services.AddDbContext<FoodSaverDbContext>(options =>
@@ -26,6 +39,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Enable Hangfire Dashboard
+app.UseHangfireDashboard("/hangfire");
+
+//Create recurring job (once app starts)
+RecurringJob.AddOrUpdate<IFoodSaverService>(
+    "find_expiring_foods",                    // Job ID
+    s => s.SendFoodExpiryReminder(3),              // Method to run
+    Cron.Daily(11));                                   // Schedule: every day
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

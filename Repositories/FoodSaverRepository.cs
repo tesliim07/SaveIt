@@ -69,5 +69,20 @@ namespace FoodSaver.Repositories
             _context.SaveChanges();
             return true;
         }
+
+        public List<FoodItems> SendFoodExpiryReminder(int daysToExpiry)
+        {
+            var todaysDate = DateOnly.FromDateTime(DateTime.Now); ;
+            var allFoodItems = GetAllFoodItems();
+            var expiryReminderItems = new List<FoodItems>();
+            foreach(var foodItem in allFoodItems)
+            {
+                if (foodItem.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
+                {
+                    expiryReminderItems.Add(foodItem);
+                }
+            }
+            return expiryReminderItems;
+        }
     }
 }
