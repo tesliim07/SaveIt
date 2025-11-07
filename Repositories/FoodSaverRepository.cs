@@ -77,7 +77,7 @@ namespace FoodSaver.Repositories
             var expiryReminderItems = new List<FoodItems>();
             foreach(var foodItem in allFoodItems)
             {
-                if (foodItem.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
+                if (foodItem.FoodExpiryDate != todaysDate && foodItem.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
                 {
                     expiryReminderItems.Add(foodItem);
                 }
