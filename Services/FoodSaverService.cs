@@ -8,10 +8,12 @@ namespace FoodSaver.Services
     {
         private readonly IFoodSaverRepository _repository;
         private readonly ILogger _logger;
-        public FoodSaverService(IFoodSaverRepository repository, ILogger<FoodSaverService> logger)
+        private readonly IEmailService _emailService;
+        public FoodSaverService(IFoodSaverRepository repository, ILogger<FoodSaverService> logger, IEmailService emailService)
         {
             _repository = repository;
             _logger = logger;
+            _emailService = emailService;
         }
 
         public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate)
@@ -76,8 +78,18 @@ namespace FoodSaver.Services
             foreach (var item in foodExpiryReminder)
             {
                 // Simulate sending a reminder (email, push notification, etc.)
-                _logger.LogInformation($"Reminder: '{item.FoodName}' expires on {item.FoodExpiryDate:d}");
+                _logger.LogInformation($"[FoodSaverService] Reminder: '{item.FoodName}' expires on {item.FoodExpiryDate}");
+                var subject = $"Reminder: {item.FoodName.ToUpper()} is about to expire";
+                var to = "oluwatobiteslim@gmail.com";
+                var htmlbody = $"<p><strong>Your {item.FoodName} </strong> is expiring soon on the {item.FoodExpiryDate }</p>";
+                SendEmail(to, subject, htmlbody);
             }
+        }
+
+        public Task<bool> SendEmail(string to, string subject, string htmlBody)
+        {
+            var saveItEmail = _emailService.SendEmail(to, subject, htmlBody);
+            return saveItEmail;
         }
     }
 }

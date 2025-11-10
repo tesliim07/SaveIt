@@ -6,6 +6,8 @@ using FoodSaver.Services.Interfaces;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,7 @@ builder.Services.AddDbContext<FoodSaverDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IFoodSaverRepository, FoodSaverRepository>();
 builder.Services.AddScoped<IFoodSaverService, FoodSaverService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddControllers()
     //Allows the conversion of enum from numbers to the actual options text,
