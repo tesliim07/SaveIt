@@ -6,18 +6,25 @@ namespace FoodSaver.Services
 {
     public class FoodSaverService : IFoodSaverService
     {
-        private readonly IFoodSaverRepository _repository;
+        private readonly IFoodSaverRepository _foodRepository;
         private readonly ILogger _logger;
         private readonly IEmailService _emailService;
-        public FoodSaverService(IFoodSaverRepository repository, ILogger<FoodSaverService> logger, IEmailService emailService)
+        private readonly IUsersRepository _usersRepository;
+        public FoodSaverService(IFoodSaverRepository foodRepository, ILogger<FoodSaverService> logger, IEmailService emailService, IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _foodRepository = foodRepository;
             _logger = logger;
             _emailService = emailService;
+            _usersRepository = usersRepository;
         }
 
-        public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate)
+        public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate, string providerId)
         {
+            var user = _usersRepository.GetUserByGoogleId(providerId);
+            if (user == null)
+            {
+                throw new Exception("User not found. Please log in first.");
+            }
             var dto = new FoodItemsCreateDto()
             {
                 FoodName = foodItemsCreate.FoodName,
@@ -29,15 +36,16 @@ namespace FoodSaver.Services
                 FoodId = Guid.NewGuid(),
                 FoodName = dto.FoodName,
                 FoodCategory = dto.FoodCategory,
-                FoodExpiryDate = dto.FoodExpiryDate
+                FoodExpiryDate = dto.FoodExpiryDate,
+                UserId = user.UserId
             };
-            var foodItemId = _repository.CreateFoodItem(newFoodItem);
+            var foodItemId = _foodRepository.CreateFoodItem(newFoodItem);
             return foodItemId;
         }
 
         public List<FoodItemsReadAndUpdateDto> GetAllFoodItems()
         {
-            var allFoodItems = _repository.GetAllFoodItems();
+            var allFoodItems = _foodRepository.GetAllFoodItems();
             var dtoList = new List<FoodItemsReadAndUpdateDto>();
             foreach (var foodItem in allFoodItems)
             {
@@ -54,7 +62,7 @@ namespace FoodSaver.Services
 
         public bool UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem)
         {
-            var isUpdateSuccessful = _repository.UpdateFoodItem(foodItem.FoodId, foodItem.FoodName, foodItem.FoodCategory, foodItem.FoodExpiryDate);
+            var isUpdateSuccessful = _foodRepository.UpdateFoodItem(foodItem.FoodId, foodItem.FoodName, foodItem.FoodCategory, foodItem.FoodExpiryDate);
             if (isUpdateSuccessful == false)
             {
                 _logger.LogError("[FoodSaverService] Can't find food item Id");
@@ -64,7 +72,7 @@ namespace FoodSaver.Services
 
         public bool DeleteFoodItem(FoodItemsDeleteDto foodItem)
         {
-            var isDeleteSuccessful = _repository.DeleteFoodItem(foodItem.FoodId);
+            var isDeleteSuccessful = _foodRepository.DeleteFoodItem(foodItem.FoodId);
             if (isDeleteSuccessful == false)
             {
                 _logger.LogError("[FoodSaverService] Can't find food item Id");
@@ -74,14 +82,13 @@ namespace FoodSaver.Services
 
         public void SendFoodExpiryReminder(int daysToExpiry)
         {
-            var foodExpiryReminder = _repository.SendFoodExpiryReminder(daysToExpiry);
+            var foodExpiryReminder = _foodRepository.SendFoodExpiryReminder(daysToExpiry);
             foreach (var item in foodExpiryReminder)
             {
-                // Simulate sending a reminder (email, push notification, etc.)
                 _logger.LogInformation($"[FoodSaverService] Reminder: '{item.FoodName}' expires on {item.FoodExpiryDate}");
                 var subject = $"Reminder: {item.FoodName.ToUpper()} is about to expire";
                 var to = "oluwatobiteslim@gmail.com";
-                var htmlbody = $"<p><strong>Your {item.FoodName} </strong> is expiring soon on the {item.FoodExpiryDate }</p>";
+                var htmlbody = $"<p><strong>Your {item.FoodName} </strong> is expiring soon on the <strong>{item.FoodExpiryDate}</strong></p>";
                 SendEmail(to, subject, htmlbody);
             }
         }

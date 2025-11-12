@@ -1,3 +1,4 @@
+//Testing
 using FoodSaver.Contexts;
 using FoodSaver.Repositories;
 using FoodSaver.Repositories.Interfaces;
@@ -5,29 +6,70 @@ using FoodSaver.Services;
 using FoodSaver.Services.Interfaces;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Add Hangfire configuration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        // Token validation parameters
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    })
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.Cookie.Name = ".FoodSaver.Auth";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+})
+.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientID"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+    // matches authorized redirect URI in Google console
+    options.CallbackPath = "/signin-google";
+});
+
+//Hangfire configuration
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(
     options =>
     {
         options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
     }
     ));
-
-//Add Hangfire server to process jobs
 builder.Services.AddHangfireServer();
 
-// Add services to the container.
+//Database and Dependency Injection.
 builder.Services.AddDbContext<FoodSaverDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IFoodSaverRepository, FoodSaverRepository>();
 builder.Services.AddScoped<IFoodSaverService, FoodSaverService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUsersRepository, UsersRepoitory>();
+builder.Services.AddScoped<IUsersService, UsersServices>();
+builder.Services.AddScoped<IJWTService, JWTService>();
 
 builder.Services.AddControllers()
     //Allows the conversion of enum from numbers to the actual options text,
@@ -37,7 +79,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(
             new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -52,7 +93,7 @@ RecurringJob.AddOrUpdate<IFoodSaverService>(
     s => s.SendFoodExpiryReminder(3),              // Method to run
     Cron.Daily(11));                                   // Schedule: every day
 
-// Configure the HTTP request pipeline.
+//Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -61,6 +102,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

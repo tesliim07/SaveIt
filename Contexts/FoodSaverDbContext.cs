@@ -9,5 +9,6 @@ namespace FoodSaver.Contexts
         {
         }
         public virtual DbSet<FoodItems> FoodItems { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

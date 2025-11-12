@@ -3,6 +3,7 @@ using System;
 using FoodSaver.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodSaver.Migrations
 {
     [DbContext(typeof(FoodSaverDbContext))]
-    partial class FoodSaverDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110205016_AddUsersTable")]
+    partial class AddUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,15 +60,8 @@ namespace FoodSaver.Migrations
                     b.Property<DateTime>("CreatedUser")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ProviderId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("UserEmail")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("UserId");

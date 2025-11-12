@@ -1,6 +1,7 @@
 ﻿using FoodSaver.Models;
 using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FoodSaver.Controllers
 {
@@ -20,12 +21,13 @@ namespace FoodSaver.Controllers
         [HttpPost("CreateFoodItem")]
         public ActionResult<Guid> CreateFoodItem([FromBody] FoodItemsCreateDto foodItemsDto)
         {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (foodItemsDto == null)
             {
                 _logger.LogError("[FoodSaverController] Food Item Creation Unsuccessful");
                 return StatusCode(400);
             }
-            var foodItemId = _foodSaverService.CreateFoodItem(foodItemsDto);
+            var foodItemId = _foodSaverService.CreateFoodItem(foodItemsDto, providerId);
             return Ok(foodItemId);
         }
 
