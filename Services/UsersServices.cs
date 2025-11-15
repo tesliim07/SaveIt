@@ -13,16 +13,25 @@ namespace FoodSaver.Services
         }
         public Guid CreateUserFromGoogleResponse(string email, string name, string providerId)
         {
-            var newUser = new Users
+            var checkIfUserExists = _usersRepository.GetUserByProviderId(providerId);
+            if (checkIfUserExists == null)
             {
-                UserId = Guid.NewGuid(),
-                UserEmail = email,
-                UserName = name,
-                ProviderId = providerId,
-                CreatedUser = DateTime.UtcNow
-            };
-            var newUserId = _usersRepository.CreateUser(newUser);
-            return newUserId;
+
+                var newUser = new Users
+                {
+                    UserId = Guid.NewGuid(),
+                    UserEmail = email,
+                    UserName = name,
+                    ProviderId = providerId,
+                    CreatedUser = DateTime.UtcNow
+                };
+                var newUserId = _usersRepository.CreateUser(newUser);
+                return newUserId;
+            }
+            else
+            {
+                return checkIfUserExists.UserId;
+            }
         }
     }
 }

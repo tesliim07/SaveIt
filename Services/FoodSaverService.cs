@@ -20,7 +20,8 @@ namespace FoodSaver.Services
 
         public Guid CreateFoodItem(FoodItemsCreateDto foodItemsCreate, string providerId)
         {
-            var user = _usersRepository.GetUserByGoogleId(providerId);
+            
+            var user = _usersRepository.GetUserByProviderId(providerId);
             if (user == null)
             {
                 throw new Exception("User not found. Please log in first.");

@@ -1,5 +1,6 @@
 ﻿using FoodSaver.Models;
 using FoodSaver.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -7,6 +8,7 @@ namespace FoodSaver.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FoodSaverController : ControllerBase
     {
         private readonly IFoodSaverService _foodSaverService;

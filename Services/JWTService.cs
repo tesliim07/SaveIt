@@ -14,15 +14,16 @@ namespace FoodSaver.Services
             _config = config;
         }
 
-        public string GenerateToken(string email, string name)
+        public string GenerateToken(string providerId, string email)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, providerId),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Name, name)
+                //new Claim(ClaimTypes.Name, name)
             };
 
             var token = new JwtSecurityToken(
