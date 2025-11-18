@@ -1,6 +1,7 @@
 ﻿using FoodSaver.Models;
 using FoodSaver.Repositories.Interfaces;
 using FoodSaver.Services.Interfaces;
+using System.Text;
 
 namespace FoodSaver.Services
 {
@@ -61,6 +62,28 @@ namespace FoodSaver.Services
             return dtoList;
         }
 
+        public List<FoodItemsReadAndUpdateDto> GetByUserId(string providerId){
+            var user = _usersRepository.GetUserByProviderId(providerId);
+            if (user == null)
+            {
+                _logger.LogError("[FoodSaverService] Can't find User");
+                throw new Exception("User not found. Please log in first.");
+            }
+            var foodItems = _foodRepository.GetByUserId(user.UserId);
+            var dtoList = new List<FoodItemsReadAndUpdateDto>();
+            foreach (var foodItem in foodItems)
+            {
+                dtoList.Add(new FoodItemsReadAndUpdateDto()
+                {
+                    FoodId = foodItem.FoodId,
+                    FoodName = foodItem.FoodName,
+                    FoodCategory = foodItem.FoodCategory,
+                    FoodExpiryDate = foodItem.FoodExpiryDate
+                });
+            }
+            return dtoList;
+        }
+
         public bool UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem)
         {
             var isUpdateSuccessful = _foodRepository.UpdateFoodItem(foodItem.FoodId, foodItem.FoodName, foodItem.FoodCategory, foodItem.FoodExpiryDate);
@@ -83,15 +106,33 @@ namespace FoodSaver.Services
 
         public void SendFoodExpiryReminder(int daysToExpiry)
         {
-            var foodExpiryReminder = _foodRepository.SendFoodExpiryReminder(daysToExpiry);
-            foreach (var item in foodExpiryReminder)
+            //var user = _usersRepository.GetUserByProviderId(providerId);
+            //if (user == null)
+            //{
+            //    _logger.LogError("[FoodSaverService] Can't find User");
+            //    throw new Exception("User not found.");
+            //}
+            var foodExpiryReminderGrupedByUser = _foodRepository.SendFoodExpiryReminder(daysToExpiry);
+            _logger.LogInformation($"[FoodSaverService], {foodExpiryReminderGrupedByUser}");
+            foreach (var group in foodExpiryReminderGrupedByUser)
             {
-                _logger.LogInformation($"[FoodSaverService] Reminder: '{item.FoodName}' expires on {item.FoodExpiryDate}");
-                var subject = $"Reminder: {item.FoodName.ToUpper()} is about to expire";
-                var to = "oluwatobiteslim@gmail.com";
-                var htmlbody = $"<p><strong>Your {item.FoodName} </strong> is expiring soon on the <strong>{item.FoodExpiryDate}</strong></p>";
+                var user = _usersRepository.GetUserById(group.Key);
+                var userItems = group.ToList();
+                var subject = $"Reminder: Your current SaveIt List (expiring soon)";
+                var to = user.UserEmail;
+                _logger.LogInformation($"[FoodSaverService] Email sent to '{to}' .");
+                var messageBuilt = new StringBuilder();
+                messageBuilt.Append($"<p>Hi {user.UserName},</p>");
+                messageBuilt.Append("<p>The following items are expiring soon:</p>");
+                foreach (var item in userItems)
+                {
+                    messageBuilt.Append(
+                        $"<p><strong>Your {item.FoodName}</strong> is expiring soon on <strong>{item.FoodExpiryDate}</strong>.</p>");
+                }
+                var htmlbody = messageBuilt.ToString();
                 SendEmail(to, subject, htmlbody);
             }
+            
         }
 
         public Task<bool> SendEmail(string to, string subject, string htmlBody)

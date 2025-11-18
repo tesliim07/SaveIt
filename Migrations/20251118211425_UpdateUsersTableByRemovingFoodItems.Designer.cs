@@ -3,6 +3,7 @@ using System;
 using FoodSaver.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodSaver.Migrations
 {
     [DbContext(typeof(FoodSaverDbContext))]
-    partial class FoodSaverDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251118211425_UpdateUsersTableByRemovingFoodItems")]
+    partial class UpdateUsersTableByRemovingFoodItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

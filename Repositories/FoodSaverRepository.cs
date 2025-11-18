@@ -27,7 +27,14 @@ namespace FoodSaver.Repositories
             _context.Dispose();
             return fooditems;
         }
-
+        public List<FoodItems> GetByUserId(Guid userId)
+        {
+            var foodItems = _context.FoodItems.Where(foodItems => foodItems.UserId == userId)
+                .OrderByDescending(foodItems => foodItems.FoodExpiryDate)
+                .ToList();
+            _context.Dispose();
+            return foodItems;
+        }
         public FoodItems GetByFoodId(Guid foodid)
         {
             var existingFoodItem = _context.FoodItems
@@ -70,19 +77,16 @@ namespace FoodSaver.Repositories
             return true;
         }
 
-        public List<FoodItems> SendFoodExpiryReminder(int daysToExpiry)
+        public List<IGrouping<Guid,FoodItems>> SendFoodExpiryReminder(int daysToExpiry)
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now); ;
-            var allFoodItems = GetAllFoodItems();
-            var expiryReminderItems = new List<FoodItems>();
-            foreach(var foodItem in allFoodItems)
-            {
-                if (foodItem.FoodExpiryDate > todaysDate && foodItem.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
-                {
-                    expiryReminderItems.Add(foodItem);
-                }
-            }
-            return expiryReminderItems;
+            var expiringFoodItems = _context.FoodItems.
+                Where(foodItems => foodItems.FoodExpiryDate > todaysDate && foodItems.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
+                .ToList();
+            var foodItemsByUser = expiringFoodItems
+                .GroupBy(foodItems => foodItems.UserId)
+                .ToList();
+            return foodItemsByUser;
         }
     }
 }

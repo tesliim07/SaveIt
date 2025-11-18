@@ -3,7 +3,6 @@
 using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -25,7 +24,7 @@ namespace FoodSaver.Controllers
 
 
         [HttpGet("login-google")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public IActionResult LoginWithGoogle()
         {
             var redirectUrl = Url.Action(nameof(GoogleCallback), "OAuth");
@@ -36,7 +35,7 @@ namespace FoodSaver.Controllers
 
 
         [HttpGet("google-callback")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<IActionResult> GoogleCallback()
         {
 

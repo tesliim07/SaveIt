@@ -12,6 +12,6 @@ namespace FoodSaver.Models
         public DateTime CreatedUser { get; set; }
 
         //One user can have multiple Food Items
-        public List<FoodItems> FoodItems { get; set; } = new List<FoodItems>();
+        //public List<FoodItems> FoodItems { get; set; } = new List<FoodItems>();
     }
 }

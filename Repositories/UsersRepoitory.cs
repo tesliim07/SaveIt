@@ -19,6 +19,17 @@ namespace FoodSaver.Repositories
             return user.UserId;
         }
 
+        public Users GetUserById(Guid userId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+            //_context.Dispose();
+            if (user != null)
+            {
+                return user;
+            }
+            return null;
+        }
+
         public Users GetUserByProviderId(string providerId)
         {
             var user = _context.Users.FirstOrDefault(u => u.ProviderId == providerId);

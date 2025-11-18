@@ -7,9 +7,11 @@ namespace FoodSaver.Services
     public class UsersServices : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
-        public UsersServices(IUsersRepository usersRepository)
+        private readonly ILogger _logger;
+        public UsersServices(IUsersRepository usersRepository, ILogger<UsersServices> logger)
         {
             _usersRepository = usersRepository;
+            _logger = logger;
         }
         public Guid CreateUserFromGoogleResponse(string email, string name, string providerId)
         {
@@ -30,6 +32,7 @@ namespace FoodSaver.Services
             }
             else
             {
+                _logger.LogInformation($"[UsersServices], User already exist with userId {checkIfUserExists.UserId}");
                 return checkIfUserExists.UserId;
             }
         }

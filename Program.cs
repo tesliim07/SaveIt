@@ -6,7 +6,6 @@ using FoodSaver.Services;
 using FoodSaver.Services.Interfaces;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -53,42 +52,7 @@ builder.Services.AddAuthentication(options =>
     options.CallbackPath = "/signin-google";
 });
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//})
-//.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-//    {
-//        // Token validation parameters
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-//            ValidAudience = builder.Configuration["Jwt:Audience"],
-//            IssuerSigningKey = new SymmetricSecurityKey(
-//                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-//        };
-//    })
-//.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-//{
-//    options.Cookie.Name = ".FoodSaver.Auth";
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-//    options.Cookie.SameSite = SameSiteMode.Lax;
-//})
-//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration["Authentication:Google:ClientID"];
-//    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 
-//    // matches authorized redirect URI in Google console
-//    options.CallbackPath = "/signin-google";
-//});
 
 //Hangfire configuration
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(
