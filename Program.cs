@@ -58,6 +58,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(
     options =>
     {
+
         options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
     }
     ));

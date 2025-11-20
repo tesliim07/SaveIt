@@ -53,7 +53,7 @@ namespace FoodSaver.Controllers
             var name = externalUser.FindFirstValue(ClaimTypes.Name);
             var providerId = externalUser.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userId = _usersService.CreateUserFromGoogleResponse(email, name, providerId);
+            var userId = await _usersService.CreateUserFromGoogleResponse(email, name, providerId);
             var jwt = _jwtService.GenerateToken(providerId, email);
 
             return Ok(new

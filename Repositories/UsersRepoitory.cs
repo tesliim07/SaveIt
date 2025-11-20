@@ -1,6 +1,7 @@
 ﻿using FoodSaver.Contexts;
 using FoodSaver.Models;
 using FoodSaver.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodSaver.Repositories
 {
@@ -12,33 +13,23 @@ namespace FoodSaver.Repositories
             _context = context;
         }
 
-        public Guid CreateUser(Users user)
+        public async Task<Guid> CreateUser(Users user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
             return user.UserId;
         }
 
-        public Users GetUserById(Guid userId)
+        public async Task<Users> GetUserById(Guid userId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-            //_context.Dispose();
-            if (user != null)
-            {
-                return user;
-            }
-            return null;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            return user;
         }
 
-        public Users GetUserByProviderId(string providerId)
+        public async Task<Users> GetUserByProviderId(string providerId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.ProviderId == providerId);
-            //_context.Dispose();
-            if (user != null)
-            {
-                return user;
-            }
-            return null;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.ProviderId == providerId);
+            return user;
         }
     }
 }

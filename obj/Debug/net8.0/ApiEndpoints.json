@@ -1,0 +1,140 @@
+[
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "CreateFoodItem",
+    "RelativePath": "api/FoodSaver/CreateFoodItem",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "foodItemsDto",
+        "Type": "FoodSaver.Models.FoodItemsCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Guid",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "DeleteFoodItem",
+    "RelativePath": "api/FoodSaver/DeleteFoodItem",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "foodItemsDeleteDto",
+        "Type": "FoodSaver.Models.FoodItemsDeleteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Boolean",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "GetAllFoodItems",
+    "RelativePath": "api/FoodSaver/GetAllFoodItems",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[FoodSaver.Models.FoodItemsReadAndUpdateDto, FoodSaver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "GetByUserId",
+    "RelativePath": "api/FoodSaver/GetFoodItemsByUserId",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[FoodSaver.Models.FoodItemsReadAndUpdateDto, FoodSaver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "UpdateFoodItem",
+    "RelativePath": "api/FoodSaver/UpdateFoodItem",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "foodItemsUpdateDto",
+        "Type": "FoodSaver.Models.FoodItemsReadAndUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Boolean",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.OAuthController",
+    "Method": "GoogleCallback",
+    "RelativePath": "OAuth/google-callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.OAuthController",
+    "Method": "LoginWithGoogle",
+    "RelativePath": "OAuth/login-google",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

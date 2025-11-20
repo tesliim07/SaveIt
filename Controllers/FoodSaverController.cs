@@ -21,7 +21,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpPost("CreateFoodItem")]
-        public ActionResult<Guid> CreateFoodItem([FromBody] FoodItemsCreateDto foodItemsDto)
+        public async Task<ActionResult<Guid>> CreateFoodItem([FromBody] FoodItemsCreateDto foodItemsDto)
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (foodItemsDto == null)
@@ -29,14 +29,14 @@ namespace FoodSaver.Controllers
                 _logger.LogError("[FoodSaverController] Food Item Creation Unsuccessful");
                 return StatusCode(400);
             }
-            var foodItemId = _foodSaverService.CreateFoodItem(foodItemsDto, providerId);
+            var foodItemId = await _foodSaverService.CreateFoodItem(foodItemsDto, providerId);
             return Ok(foodItemId);
         }
 
         [HttpGet("GetAllFoodItems")]
-        public ActionResult<List<FoodItemsReadAndUpdateDto>> GetAllFoodItems()
+        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetAllFoodItems()
         {
-            var foodItems = _foodSaverService.GetAllFoodItems();
+            var foodItems = await _foodSaverService.GetAllFoodItems();
             if (foodItems.Count == 0)
             {
                 _logger.LogInformation("No Food Items Found");
@@ -45,7 +45,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpGet("GetFoodItemsByUserId")]
-        public ActionResult<List<FoodItemsReadAndUpdateDto>> GetByUserId()
+        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetByUserId()
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null)
@@ -53,7 +53,7 @@ namespace FoodSaver.Controllers
                 _logger.LogError("[FoodSaverController], Unable to get provider Id from generated token");
                 return StatusCode(400);
             }
-            var foodItems = _foodSaverService.GetByUserId(providerId);
+            var foodItems = await _foodSaverService.GetByUserId(providerId);
             if (foodItems.Count == 0)
             {
                 _logger.LogInformation("User hasn't added food Items");
@@ -62,14 +62,14 @@ namespace FoodSaver.Controllers
         }
 
         [HttpPut("UpdateFoodItem")]
-        public ActionResult<Boolean> UpdateFoodItem([FromBody] FoodItemsReadAndUpdateDto foodItemsUpdateDto)
+        public async Task<ActionResult<Boolean>> UpdateFoodItem([FromBody] FoodItemsReadAndUpdateDto foodItemsUpdateDto)
         {
             if (foodItemsUpdateDto == null)
             {
                 _logger.LogError("[FoodSaverController] Food Item Update Unsuccessful");
                 return StatusCode(400);
             }
-            var isUpdateSuccessful = _foodSaverService.UpdateFoodItem(foodItemsUpdateDto);
+            var isUpdateSuccessful = await _foodSaverService.UpdateFoodItem(foodItemsUpdateDto);
             if (isUpdateSuccessful == false)
             {
                 return StatusCode(404);
@@ -78,14 +78,14 @@ namespace FoodSaver.Controllers
         }
 
         [HttpDelete("DeleteFoodItem")]
-        public ActionResult<Boolean> DeleteFoodItem([FromBody] FoodItemsDeleteDto foodItemsDeleteDto)
+        public async Task<ActionResult<Boolean>> DeleteFoodItem([FromBody] FoodItemsDeleteDto foodItemsDeleteDto)
         {
             if (foodItemsDeleteDto == null)
             {
                 _logger.LogError("[FoodSaverController] Food Item Delete Unsuccessful");
                 return StatusCode(400);
             }
-            var isDeleteSuccessful = _foodSaverService.DeleteFoodItem(foodItemsDeleteDto);
+            var isDeleteSuccessful = await _foodSaverService.DeleteFoodItem(foodItemsDeleteDto);
             if (isDeleteSuccessful == false)
             {
                 return StatusCode(404);

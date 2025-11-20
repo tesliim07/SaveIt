@@ -1,6 +1,7 @@
 ﻿using FoodSaver.Contexts;
 using FoodSaver.Models;
 using FoodSaver.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodSaver.Repositories
 {
@@ -13,39 +14,37 @@ namespace FoodSaver.Repositories
             _context = context;
         }
 
-        public Guid CreateFoodItem(FoodItems fooditem)
+        public async Task<Guid> CreateFoodItem(FoodItems fooditem)
         {
-            _context.FoodItems.Add(fooditem);
-            _context.SaveChanges();
+            await _context.FoodItems.AddAsync(fooditem);
+            await _context.SaveChangesAsync();
             return fooditem.FoodId;
         }
 
-        public List<FoodItems> GetAllFoodItems()
+        public async Task<List<FoodItems>> GetAllFoodItems()
         {
-            var fooditems = _context.FoodItems.OrderByDescending(
-                fooditems => fooditems.FoodExpiryDate).ToList();
-            _context.Dispose();
+            var fooditems = await _context.FoodItems.OrderByDescending(
+                fooditems => fooditems.FoodExpiryDate).ToListAsync();
             return fooditems;
         }
-        public List<FoodItems> GetByUserId(Guid userId)
+        public async Task<List<FoodItems>> GetByUserId(Guid userId)
         {
-            var foodItems = _context.FoodItems.Where(foodItems => foodItems.UserId == userId)
+            var foodItems = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId)
                 .OrderByDescending(foodItems => foodItems.FoodExpiryDate)
-                .ToList();
-            _context.Dispose();
+                .ToListAsync();
             return foodItems;
         }
-        public FoodItems GetByFoodId(Guid foodid)
+        public async Task<FoodItems> GetByFoodId(Guid foodid)
         {
-            var existingFoodItem = _context.FoodItems
+            var existingFoodItem = await _context.FoodItems
                 .Where(existingFoodItem => existingFoodItem.FoodId == foodid)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
             return existingFoodItem;
         }
 
-        public bool UpdateFoodItem(Guid foodid, string? foodname, category? foodcategory, DateOnly? foodexpirydate)
+        public async Task<bool> UpdateFoodItem(Guid foodid, string? foodname, category? foodcategory, DateOnly? foodexpirydate)
         {
-            var existingFoodItem = GetByFoodId(foodid);
+            var existingFoodItem = await GetByFoodId(foodid);
             if (existingFoodItem == null)
             {
                 return false;
@@ -68,21 +67,21 @@ namespace FoodSaver.Repositories
             
         }
 
-        public bool DeleteFoodItem(Guid foodid)
+        public async Task<bool> DeleteFoodItem(Guid foodid)
         {
-            var existingFoodItem = GetByFoodId(foodid);
+            var existingFoodItem = await GetByFoodId(foodid);
             if (existingFoodItem == null) { return false; }
             _context.FoodItems.Remove(existingFoodItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<IGrouping<Guid,FoodItems>> SendFoodExpiryReminder(int daysToExpiry)
+        public async Task<List<IGrouping<Guid,FoodItems>>> SendFoodExpiryReminder(int daysToExpiry)
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now); ;
-            var expiringFoodItems = _context.FoodItems.
+            var expiringFoodItems = await _context.FoodItems.
                 Where(foodItems => foodItems.FoodExpiryDate > todaysDate && foodItems.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
-                .ToList();
+                .ToListAsync();
             var foodItemsByUser = expiringFoodItems
                 .GroupBy(foodItems => foodItems.UserId)
                 .ToList();

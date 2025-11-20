@@ -13,9 +13,9 @@ namespace FoodSaver.Services
             _usersRepository = usersRepository;
             _logger = logger;
         }
-        public Guid CreateUserFromGoogleResponse(string email, string name, string providerId)
+        public async Task<Guid> CreateUserFromGoogleResponse(string email, string name, string providerId)
         {
-            var checkIfUserExists = _usersRepository.GetUserByProviderId(providerId);
+            var checkIfUserExists = await _usersRepository.GetUserByProviderId(providerId);
             if (checkIfUserExists == null)
             {
 
@@ -27,7 +27,7 @@ namespace FoodSaver.Services
                     ProviderId = providerId,
                     CreatedUser = DateTime.UtcNow
                 };
-                var newUserId = _usersRepository.CreateUser(newUser);
+                var newUserId = await _usersRepository.CreateUser(newUser);
                 return newUserId;
             }
             else
