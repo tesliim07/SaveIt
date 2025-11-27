@@ -85,7 +85,19 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// server: allow http://localhost:5173
+builder.Services.AddCors(options =>
+  options.AddPolicy("dev", p =>
+    p.WithOrigins("http://localhost:5173")
+     .AllowAnyHeader()
+     .AllowAnyMethod()
+     .AllowCredentials()));
+
+
+
 var app = builder.Build();
+
+app.UseCors("dev");
 
 // Enable Hangfire Dashboard
 app.UseHangfireDashboard("/hangfire");

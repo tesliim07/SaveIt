@@ -15,8 +15,5 @@
         public required DateOnly FoodExpiryDate { get; set; }
     }
 
-    public class FoodItemsDeleteDto
-    {
-        public Guid FoodId { get; set; }
-    }
+    
 }

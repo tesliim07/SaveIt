@@ -55,15 +55,8 @@ namespace FoodSaver.Controllers
 
             var userId = await _usersService.CreateUserFromGoogleResponse(email, name, providerId);
             var jwt = _jwtService.GenerateToken(providerId, email);
-
-            return Ok(new
-            {
-                message = "Google login success (minimal)",
-                email,
-                name,
-                providerId,
-                Token = jwt
-            });
+            var redirectUrl = $"http://localhost:5173/oauth-callback?token={jwt}";
+            return Redirect(redirectUrl);
         }
     }
 }

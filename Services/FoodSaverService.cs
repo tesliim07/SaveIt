@@ -62,7 +62,7 @@ namespace FoodSaver.Services
             return dtoList;
         }
 
-        public async Task<List<FoodItemsReadAndUpdateDto>> GetByUserId(string providerId){
+        public async Task<List<FoodItemsReadAndUpdateDto>> GetUserByProviderId(string providerId){
             var user = await _usersRepository.GetUserByProviderId(providerId);
             if (user == null)
             {
@@ -94,9 +94,9 @@ namespace FoodSaver.Services
             return isUpdateSuccessful;
         }
 
-        public async Task<bool> DeleteFoodItem(FoodItemsDeleteDto foodItem)
+        public async Task<bool> DeleteFoodItem(Guid foodId)
         {
-            var isDeleteSuccessful = await _foodRepository.DeleteFoodItem(foodItem.FoodId);
+            var isDeleteSuccessful = await _foodRepository.DeleteFoodItem(foodId);
             if (isDeleteSuccessful == false)
             {
                 _logger.LogError("[FoodSaverService] Can't find food item Id");
@@ -106,12 +106,6 @@ namespace FoodSaver.Services
 
         public async Task SendFoodExpiryReminder(int daysToExpiry)
         {
-            //var user = _usersRepository.GetUserByProviderId(providerId);
-            //if (user == null)
-            //{
-            //    _logger.LogError("[FoodSaverService] Can't find User");
-            //    throw new Exception("User not found.");
-            //}
             var foodExpiryReminderGrupedByUser = await _foodRepository.SendFoodExpiryReminder(daysToExpiry);
             _logger.LogInformation($"[FoodSaverService], {foodExpiryReminderGrupedByUser}");
             foreach (var group in foodExpiryReminderGrupedByUser)

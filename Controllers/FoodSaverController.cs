@@ -44,8 +44,8 @@ namespace FoodSaver.Controllers
             return Ok(foodItems);
         }
 
-        [HttpGet("GetFoodItemsByUserId")]
-        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetByUserId()
+        [HttpGet("GetFoodItemsByUserProviderId")]
+        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetUserByProviderId()
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null)
@@ -53,7 +53,7 @@ namespace FoodSaver.Controllers
                 _logger.LogError("[FoodSaverController], Unable to get provider Id from generated token");
                 return StatusCode(400);
             }
-            var foodItems = await _foodSaverService.GetByUserId(providerId);
+            var foodItems = await _foodSaverService.GetUserByProviderId(providerId);
             if (foodItems.Count == 0)
             {
                 _logger.LogInformation("User hasn't added food Items");
@@ -77,15 +77,10 @@ namespace FoodSaver.Controllers
             return Ok(isUpdateSuccessful);
         }
 
-        [HttpDelete("DeleteFoodItem")]
-        public async Task<ActionResult<Boolean>> DeleteFoodItem([FromBody] FoodItemsDeleteDto foodItemsDeleteDto)
+        [HttpDelete("DeleteFoodItem/{foodId:guid}")]
+        public async Task<ActionResult<Boolean>> DeleteFoodItem(Guid foodId)
         {
-            if (foodItemsDeleteDto == null)
-            {
-                _logger.LogError("[FoodSaverController] Food Item Delete Unsuccessful");
-                return StatusCode(400);
-            }
-            var isDeleteSuccessful = await _foodSaverService.DeleteFoodItem(foodItemsDeleteDto);
+            var isDeleteSuccessful = await _foodSaverService.DeleteFoodItem(foodId);
             if (isDeleteSuccessful == false)
             {
                 return StatusCode(404);
