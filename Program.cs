@@ -88,7 +88,7 @@ builder.Services.AddSwaggerGen();
 // server: allow http://localhost:5173
 builder.Services.AddCors(options =>
   options.AddPolicy("dev", p =>
-    p.WithOrigins("http://localhost:5173")
+    p.WithOrigins("http://localhost:5173", "https://saveit-frontend-klwdw.ondigitalocean.app")
      .AllowAnyHeader()
      .AllowAnyMethod()
      .AllowCredentials()));
