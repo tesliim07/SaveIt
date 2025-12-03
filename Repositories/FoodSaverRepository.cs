@@ -34,6 +34,16 @@ namespace FoodSaver.Repositories
                 .ToListAsync();
             return foodItems;
         }
+
+        public async Task<List<FoodItems>> GetExpiringItemsByUserId(Guid userId)
+        {
+            var todaysDate = DateOnly.FromDateTime(DateTime.Now);
+            var foodItems = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId && foodItems.FoodExpiryDate > todaysDate && foodItems.FoodExpiryDate <= todaysDate.AddDays(3))
+                .OrderByDescending(foodItems => foodItems.FoodExpiryDate)
+                .ToListAsync();
+            return foodItems;
+        }
+
         public async Task<FoodItems> GetByFoodId(Guid foodid)
         {
             var existingFoodItem = await _context.FoodItems
@@ -78,7 +88,7 @@ namespace FoodSaver.Repositories
 
         public async Task<List<IGrouping<Guid,FoodItems>>> SendFoodExpiryReminder(int daysToExpiry)
         {
-            var todaysDate = DateOnly.FromDateTime(DateTime.Now); ;
+            var todaysDate = DateOnly.FromDateTime(DateTime.Now);
             var expiringFoodItems = await _context.FoodItems.
                 Where(foodItems => foodItems.FoodExpiryDate > todaysDate && foodItems.FoodExpiryDate <= todaysDate.AddDays(daysToExpiry))
                 .ToListAsync();

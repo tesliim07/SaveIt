@@ -7,6 +7,7 @@ namespace FoodSaver.Repositories.Interfaces
         public Task<Guid> CreateFoodItem(FoodItems fooditem);
         public Task<List<FoodItems>> GetAllFoodItems();
         public Task<List<FoodItems>> GetByUserId(Guid userId);
+        public Task<List<FoodItems>> GetExpiringItemsByUserId(Guid userId);
         public Task<FoodItems> GetByFoodId(Guid foodid);
         public Task<bool> UpdateFoodItem(Guid foodid, string? foodname = null, category? foodcategory = null, DateOnly? foodexpirydate = null);
         public Task<bool> DeleteFoodItem(Guid foodid);

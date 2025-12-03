@@ -94,7 +94,45 @@
         }
       }
     },
-    "/api/FoodSaver/GetFoodItemsByUserId": {
+    "/api/FoodSaver/GetFoodItemsByUserProviderId": {
+      "get": {
+        "tags": [
+          "FoodSaver"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FoodItemsReadAndUpdateDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FoodItemsReadAndUpdateDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FoodItemsReadAndUpdateDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FoodSaver/GetExpiringItemsByUserProviderId": {
       "get": {
         "tags": [
           "FoodSaver"
@@ -180,30 +218,22 @@
         }
       }
     },
-    "/api/FoodSaver/DeleteFoodItem": {
+    "/api/FoodSaver/DeleteFoodItem/{foodId}": {
       "delete": {
         "tags": [
           "FoodSaver"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FoodItemsDeleteDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FoodItemsDeleteDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FoodItemsDeleteDto"
-              }
+        "parameters": [
+          {
+            "name": "foodId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -272,16 +302,6 @@
           "foodExpiryDate": {
             "type": "string",
             "format": "date"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FoodItemsDeleteDto": {
-        "type": "object",
-        "properties": {
-          "foodId": {
-            "type": "string",
-            "format": "uuid"
           }
         },
         "additionalProperties": false

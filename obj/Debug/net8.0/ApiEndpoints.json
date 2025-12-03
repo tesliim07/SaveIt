@@ -28,14 +28,14 @@
   {
     "ContainingType": "FoodSaver.Controllers.FoodSaverController",
     "Method": "DeleteFoodItem",
-    "RelativePath": "api/FoodSaver/DeleteFoodItem",
+    "RelativePath": "api/FoodSaver/DeleteFoodItem/{foodId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "foodItemsDeleteDto",
-        "Type": "FoodSaver.Models.FoodItemsDeleteDto",
+        "Name": "foodId",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
@@ -73,8 +73,28 @@
   },
   {
     "ContainingType": "FoodSaver.Controllers.FoodSaverController",
-    "Method": "GetByUserId",
-    "RelativePath": "api/FoodSaver/GetFoodItemsByUserId",
+    "Method": "GetExpiringItemsByUserProviderId",
+    "RelativePath": "api/FoodSaver/GetExpiringItemsByUserProviderId",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[FoodSaver.Models.FoodItemsReadAndUpdateDto, FoodSaver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FoodSaver.Controllers.FoodSaverController",
+    "Method": "GetUserByProviderId",
+    "RelativePath": "api/FoodSaver/GetFoodItemsByUserProviderId",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

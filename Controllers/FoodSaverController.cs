@@ -61,6 +61,23 @@ namespace FoodSaver.Controllers
             return Ok(foodItems);
         }
 
+        [HttpGet("GetExpiringItemsByUserProviderId")]
+        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetExpiringItemsByUserProviderId()
+        {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (providerId == null)
+            {
+                _logger.LogError("[FoodSaverController], Unable to get provider Id from generated token");
+                return StatusCode(400);
+            }
+            var foodItems = await _foodSaverService.GetExpiringItemsByUserProviderId(providerId);
+            if (foodItems.Count == 0)
+            {
+                _logger.LogInformation("User hasn't added food Items");
+            }
+            return Ok(foodItems);
+        }
+
         [HttpPut("UpdateFoodItem")]
         public async Task<ActionResult<Boolean>> UpdateFoodItem([FromBody] FoodItemsReadAndUpdateDto foodItemsUpdateDto)
         {

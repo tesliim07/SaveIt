@@ -84,6 +84,29 @@ namespace FoodSaver.Services
             return dtoList;
         }
 
+        public async Task<List<FoodItemsReadAndUpdateDto>> GetExpiringItemsByUserProviderId(string providerId)
+        {
+            var user = await _usersRepository.GetUserByProviderId(providerId);
+            if (user == null)
+            {
+                _logger.LogError("[FoodSaverService] Can't find User");
+                throw new Exception("User not found. Please log in first.");
+            }
+            var foodItems = await _foodRepository.GetExpiringItemsByUserId(user.UserId);
+            var dtoList = new List<FoodItemsReadAndUpdateDto>();
+            foreach (var foodItem in foodItems)
+            {
+                dtoList.Add(new FoodItemsReadAndUpdateDto()
+                {
+                    FoodId = foodItem.FoodId,
+                    FoodName = foodItem.FoodName,
+                    FoodCategory = foodItem.FoodCategory,
+                    FoodExpiryDate = foodItem.FoodExpiryDate
+                });
+            }
+            return dtoList;
+        }
+
         public async Task<bool> UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem)
         {
             var isUpdateSuccessful = await _foodRepository.UpdateFoodItem(foodItem.FoodId, foodItem.FoodName, foodItem.FoodCategory, foodItem.FoodExpiryDate);
