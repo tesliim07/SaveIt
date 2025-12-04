@@ -23,14 +23,14 @@ namespace FoodSaver.Repositories
 
         public async Task<List<FoodItems>> GetAllFoodItems()
         {
-            var fooditems = await _context.FoodItems.OrderByDescending(
+            var fooditems = await _context.FoodItems.OrderBy(
                 fooditems => fooditems.FoodExpiryDate).ToListAsync();
             return fooditems;
         }
         public async Task<List<FoodItems>> GetByUserId(Guid userId)
         {
             var foodItems = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId)
-                .OrderByDescending(foodItems => foodItems.FoodExpiryDate)
+                .OrderBy(foodItems => foodItems.FoodExpiryDate)
                 .ToListAsync();
             return foodItems;
         }
@@ -39,7 +39,7 @@ namespace FoodSaver.Repositories
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now);
             var foodItems = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId && foodItems.FoodExpiryDate > todaysDate && foodItems.FoodExpiryDate <= todaysDate.AddDays(3))
-                .OrderByDescending(foodItems => foodItems.FoodExpiryDate)
+                .OrderBy(foodItems => foodItems.FoodExpiryDate)
                 .ToListAsync();
             return foodItems;
         }

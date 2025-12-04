@@ -24,7 +24,6 @@ namespace FoodSaver.Controllers
 
 
         [HttpGet("login-google")]
-        //[AllowAnonymous]
         public IActionResult LoginWithGoogle()
         {
             var redirectUrl = Url.Action(nameof(GoogleCallback), "OAuth");
@@ -35,7 +34,6 @@ namespace FoodSaver.Controllers
 
 
         [HttpGet("google-callback")]
-        //[AllowAnonymous]
         public async Task<IActionResult> GoogleCallback()
         {
 
