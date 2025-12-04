@@ -86,6 +86,19 @@ namespace FoodSaver.Repositories
             return true;
         }
 
+        public async Task DeleteExpiredFood()
+        {
+            var todaysDate = DateOnly.FromDateTime(DateTime.Now);
+            var foods = await _context.FoodItems
+                .Where(foodItems => foodItems.FoodExpiryDate <= todaysDate)
+                .ToListAsync();
+            foreach(var food in foods)
+            {
+                _context.FoodItems.Remove(food);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<List<IGrouping<Guid,FoodItems>>> SendFoodExpiryReminder(int daysToExpiry)
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now);

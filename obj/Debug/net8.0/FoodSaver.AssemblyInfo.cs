@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FoodSaver")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38196e16d372785e26a29373d1da25b8beb2e42d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b87b3536a7767c82aab2b5baadec168a1b8114b7")]
 [assembly: System.Reflection.AssemblyProductAttribute("FoodSaver")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FoodSaver")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

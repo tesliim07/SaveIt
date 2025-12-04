@@ -1,6 +1,4 @@
-﻿//Testing
-
-using FoodSaver.Services.Interfaces;
+﻿using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +10,10 @@ namespace FoodSaver.Controllers
     [Route("OAuth")]
     public class OAuthController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly IUsersService _usersService;
         private readonly IJWTService _jwtService;
-        public OAuthController(ILogger<OAuthController> logger, IUsersService usersService, IJWTService jwtService)
+        public OAuthController(IUsersService usersService, IJWTService jwtService)
         {
-            _logger = logger;
             _usersService = usersService;
             _jwtService = jwtService;
         }

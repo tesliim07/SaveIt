@@ -108,6 +108,12 @@ RecurringJob.AddOrUpdate<IFoodSaverService>(
     s => s.SendFoodExpiryReminder(3),              // Method to run
     Cron.Daily(11));                                   // Schedule: every day
 
+//Create recurring job (once app starts)
+RecurringJob.AddOrUpdate<IFoodSaverService>(
+    "delete_expired_foods",                    // Job ID
+    s => s.DeleteExpiredFood(),              // Method to run
+    Cron.Daily(11));                                  // Schedule: every day
+
 //Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

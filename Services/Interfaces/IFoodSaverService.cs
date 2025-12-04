@@ -11,6 +11,7 @@ namespace FoodSaver.Services.Interfaces
         public Task<bool> UpdateFoodItem(FoodItemsReadAndUpdateDto foodItem);
         public Task<bool> DeleteFoodItem(Guid foodId);
         public Task SendFoodExpiryReminder(int daysToExpiry);
+        public Task DeleteExpiredFood();
         public Task<bool> SendEmail(string to, string subject, string htmlBody);
     }
 }
