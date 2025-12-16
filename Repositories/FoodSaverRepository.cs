@@ -27,6 +27,7 @@ namespace FoodSaver.Repositories
                 fooditems => fooditems.FoodExpiryDate).ToListAsync();
             return fooditems;
         }
+
         public async Task<List<FoodItems>> GetByUserId(Guid userId)
         {
             var foodItems = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId)
@@ -74,7 +75,6 @@ namespace FoodSaver.Repositories
             }
             _context.SaveChanges();
             return true;
-            
         }
 
         public async Task<bool> DeleteFoodItem(Guid foodid)
@@ -86,15 +86,28 @@ namespace FoodSaver.Repositories
             return true;
         }
 
-        public async Task DeleteExpiredFood()
+        //public async Task DeleteExpiredFood()
+        //{
+        //    var todaysDate = DateOnly.FromDateTime(DateTime.Now);
+        //    var foods = await _context.FoodItems
+        //        .Where(foodItems => foodItems.FoodExpiryDate <= todaysDate)
+        //        .ToListAsync();
+        //    foreach(var food in foods)
+        //    {
+        //        _context.FoodItems.Remove(food);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
+
+        public async Task DeleteExpiredFood(Guid userId)
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now);
-            var foods = await _context.FoodItems
-                .Where(foodItems => foodItems.FoodExpiryDate <= todaysDate)
+            var expiredUserFoods = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId && foodItems.FoodExpiryDate <= todaysDate)
+                .OrderBy(foodItems => foodItems.FoodExpiryDate)
                 .ToListAsync();
-            foreach(var food in foods)
+            foreach (var expiredFood in expiredUserFoods)
             {
-                _context.FoodItems.Remove(food);
+                _context.FoodItems.Remove(expiredFood);
                 await _context.SaveChangesAsync();
             }
         }

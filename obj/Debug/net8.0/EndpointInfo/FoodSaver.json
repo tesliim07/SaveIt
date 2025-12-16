@@ -258,6 +258,28 @@
         }
       }
     },
+    "/api/Job/RunDeleteJob/{deleteDecision}": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "parameters": [
+          {
+            "name": "deleteDecision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/OAuth/login-google": {
       "get": {
         "tags": [

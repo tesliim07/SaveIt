@@ -36,5 +36,16 @@ namespace FoodSaver.Services
                 return checkIfUserExists.UserId;
             }
         }
+
+        public async Task<Guid> GetUserIdFromProviderId(string providerId)
+        {
+            var user = await _usersRepository.GetUserByProviderId(providerId);
+            if (user == null)
+            {
+                _logger.LogError($"[UsersServices], No user found with providerId {providerId}");
+                throw new Exception("User not found");
+            }
+            return user.UserId;
+        }
     }
 }

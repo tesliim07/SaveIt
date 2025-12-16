@@ -138,6 +138,22 @@
     ]
   },
   {
+    "ContainingType": "FoodSaver.Controllers.JobController",
+    "Method": "RunDeleteJob",
+    "RelativePath": "api/Job/RunDeleteJob/{deleteDecision}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deleteDecision",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FoodSaver.Controllers.OAuthController",
     "Method": "GoogleCallback",
     "RelativePath": "OAuth/google-callback",

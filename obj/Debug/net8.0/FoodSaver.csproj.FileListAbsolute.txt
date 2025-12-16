@@ -169,3 +169,4 @@ C:\Users\HASSAN TESLIM\source\repos\FoodSaver\FoodSaver\bin\Debug\net8.0\Microso
 C:\Users\HASSAN TESLIM\source\repos\FoodSaver\FoodSaver\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\HASSAN TESLIM\source\repos\FoodSaver\FoodSaver\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\HASSAN TESLIM\source\repos\FoodSaver\FoodSaver\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\HASSAN TESLIM\source\repos\FoodSaver\FoodSaver\obj\Debug\net8.0\swae.build.ex.cache

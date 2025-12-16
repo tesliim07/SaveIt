@@ -152,10 +152,10 @@ namespace FoodSaver.Services
             
         }
 
-        public async Task DeleteExpiredFood()
-        {
-            await _foodRepository.DeleteExpiredFood();
-        }
+        //public async Task DeleteExpiredFood()
+        //{
+        //    await _foodRepository.DeleteExpiredFood();
+        //}
 
         public async Task<bool> SendEmail(string to, string subject, string htmlBody)
         {
