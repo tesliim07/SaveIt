@@ -9,6 +9,7 @@ namespace FoodSaver.Models
         public required string UserEmail { get; set; }
         public string? UserName { get; set; }
         public required string ProviderId { get; set; }
+        public bool DeleteDecision { get; set; } = false;
         public DateTime CreatedUser { get; set; }
 
         //One user can have multiple Food Items

@@ -10,19 +10,19 @@ namespace FoodSaver.Services
         private readonly IFoodSaverRepository _foodRepository;
         private readonly ILogger _logger;
         private readonly IEmailService _emailService;
-        private readonly IUsersRepository _usersRepository;
-        public FoodSaverService(IFoodSaverRepository foodRepository, ILogger<FoodSaverService> logger, IEmailService emailService, IUsersRepository usersRepository)
+        private readonly IUsersService _usersService;
+        public FoodSaverService(IFoodSaverRepository foodRepository, ILogger<FoodSaverService> logger, IEmailService emailService, IUsersService usersService)
         {
             _foodRepository = foodRepository;
             _logger = logger;
             _emailService = emailService;
-            _usersRepository = usersRepository;
+            _usersService = usersService;
         }
 
         public async Task<Guid> CreateFoodItem(FoodItemsCreateDto foodItemsCreate, string providerId)
         {
             
-            var user = await _usersRepository.GetUserByProviderId(providerId);
+            var user = await _usersService.GetUserByProviderId(providerId);
             if (user == null)
             {
                 throw new Exception("User not found. Please log in first.");
@@ -63,7 +63,7 @@ namespace FoodSaver.Services
         }
 
         public async Task<List<FoodItemsReadAndUpdateDto>> GetUserByProviderId(string providerId){
-            var user = await _usersRepository.GetUserByProviderId(providerId);
+            var user = await _usersService.GetUserByProviderId(providerId);
             if (user == null)
             {
                 _logger.LogError("[FoodSaverService] Can't find User");
@@ -86,7 +86,7 @@ namespace FoodSaver.Services
 
         public async Task<List<FoodItemsReadAndUpdateDto>> GetExpiringItemsByUserProviderId(string providerId)
         {
-            var user = await _usersRepository.GetUserByProviderId(providerId);
+            var user = await _usersService.GetUserByProviderId(providerId);
             if (user == null)
             {
                 _logger.LogError("[FoodSaverService] Can't find User");
@@ -133,7 +133,7 @@ namespace FoodSaver.Services
             _logger.LogInformation($"[FoodSaverService], {foodExpiryReminderGrupedByUser}");
             foreach (var group in foodExpiryReminderGrupedByUser)
             {
-                var user = await _usersRepository.GetUserById(group.Key);
+                var user = await _usersService.GetUserById(group.Key);
                 var userItems = group.ToList();
                 var subject = $"Reminder: Your current SaveIt List (expiring soon)";
                 var to = user.UserEmail;
@@ -152,10 +152,29 @@ namespace FoodSaver.Services
             
         }
 
-        //public async Task DeleteExpiredFood()
-        //{
-        //    await _foodRepository.DeleteExpiredFood();
-        //}
+        public async Task<bool> DeleteExpiredFood(Guid userId)
+        {
+            var isDeleted = await _foodRepository.DeleteExpiredFood(userId);
+            return isDeleted;
+        }
+
+        public async Task DeleteUsersExpiredFood()
+        {
+            var usersWithDeleteDecisionTrue = await _usersService.GetUsersWithDeleteDecisionTrue();
+            foreach (var user in usersWithDeleteDecisionTrue)
+            {
+                var isDeleted = await _foodRepository.DeleteExpiredFood(user.UserId);
+                if (isDeleted)
+                {
+                    _logger.LogInformation($"[FoodSaverService], Deleted expired food items for user with providerId {user.ProviderId}");
+                }
+                else
+                {
+                    _logger.LogInformation($"[FoodSaverService], No expired food items to delete for user with providerId {user.ProviderId}");
+                }
+            }
+
+        }
 
         public async Task<bool> SendEmail(string to, string subject, string htmlBody)
         {

@@ -37,7 +37,13 @@ namespace FoodSaver.Services
             }
         }
 
-        public async Task<Guid> GetUserIdFromProviderId(string providerId)
+        public async Task<Users> GetUserById(Guid userId)
+        {
+            var user = await _usersRepository.GetUserById(userId);
+            return user;
+        }
+
+        public async Task<Users> GetUserByProviderId(string providerId)
         {
             var user = await _usersRepository.GetUserByProviderId(providerId);
             if (user == null)
@@ -45,7 +51,24 @@ namespace FoodSaver.Services
                 _logger.LogError($"[UsersServices], No user found with providerId {providerId}");
                 throw new Exception("User not found");
             }
-            return user.UserId;
+            return user;
+        }
+
+        public async Task<bool> UpdateDeleteDecision(string providerId, bool deleteDecision)
+        {
+            var result = await _usersRepository.UpdateDeleteDecision(providerId, deleteDecision);
+            if (!result)
+            {
+                _logger.LogError($"[UsersServices], Unable to update delete decision for user with providerId {providerId}");
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<Users>> GetUsersWithDeleteDecisionTrue()
+        {
+            var users = await _usersRepository.GetUsersWithDeleteDecisionTrue();
+            return users;
         }
     }
 }

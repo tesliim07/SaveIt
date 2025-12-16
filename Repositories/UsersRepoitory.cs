@@ -31,5 +31,23 @@ namespace FoodSaver.Repositories
             var user = await _context.Users.FirstOrDefaultAsync(u => u.ProviderId == providerId);
             return user;
         }
+
+        public async Task<bool> UpdateDeleteDecision(string providerId, bool deleteDecision)
+        {
+            var existingUser = await GetUserByProviderId(providerId);
+            if (existingUser == null)
+            {
+                return false;
+            }
+            existingUser.DeleteDecision = deleteDecision;
+            _context.SaveChanges();
+            return true;
+        }
+
+        public async Task<List<Users>> GetUsersWithDeleteDecisionTrue()
+        {
+            var users = await _context.Users.Where(user => user.DeleteDecision == true).ToListAsync();
+            return users;
+        }
     }
 }

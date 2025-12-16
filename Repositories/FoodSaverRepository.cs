@@ -99,7 +99,7 @@ namespace FoodSaver.Repositories
         //    }
         //}
 
-        public async Task DeleteExpiredFood(Guid userId)
+        public async Task<bool> DeleteExpiredFood(Guid userId)
         {
             var todaysDate = DateOnly.FromDateTime(DateTime.Now);
             var expiredUserFoods = await _context.FoodItems.Where(foodItems => foodItems.UserId == userId && foodItems.FoodExpiryDate <= todaysDate)
@@ -110,6 +110,7 @@ namespace FoodSaver.Repositories
                 _context.FoodItems.Remove(expiredFood);
                 await _context.SaveChangesAsync();
             }
+            return true;
         }
 
         public async Task<List<IGrouping<Guid,FoodItems>>> SendFoodExpiryReminder(int daysToExpiry)
