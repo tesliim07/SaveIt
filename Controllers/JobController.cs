@@ -1,4 +1,5 @@
-﻿using FoodSaver.Services.Interfaces;
+﻿using FoodSaver.Models;
+using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -36,6 +37,19 @@ namespace FoodSaver.Controllers
                 var isDeleted = await _foodSaverService.DeleteExpiredFood(user.UserId);
             }
             return Ok();
+        }
+
+        [HttpGet("GetUserDeleteDecision")]
+        public async Task<ActionResult<bool>> GetUserDeleteDecision()
+        {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _usersService.GetUserByProviderId(providerId);
+            if (user == null)
+            {
+                _logger.LogError("[JobController], Unable to get user from provider Id");
+                return StatusCode(400);
+            }
+            return Ok(user.DeleteDecision);
         }
     }
 }
