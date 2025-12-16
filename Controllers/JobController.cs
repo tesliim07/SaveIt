@@ -1,5 +1,4 @@
-﻿using FoodSaver.Models;
-using FoodSaver.Services.Interfaces;
+﻿using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -30,6 +29,7 @@ namespace FoodSaver.Controllers
                 _logger.LogError("[JobController], Unable to get provider Id from generated token");
                 return StatusCode(400);
             }
+            _logger.LogInformation($"[JobController], Running delete job for providerId: {providerId} with deleteDecision: {deleteDecision}");
             var isUpdated = await _usersService.UpdateDeleteDecision(providerId, deleteDecision);
             if (isUpdated && deleteDecision)
             {

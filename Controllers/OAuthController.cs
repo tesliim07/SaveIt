@@ -1,6 +1,7 @@
 ﻿using FoodSaver.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -52,6 +53,17 @@ namespace FoodSaver.Controllers
             //var redirectUrl = $"http://localhost:5173/oauth-callback?token={jwt}";
             var redirectUrl = $"https://saveit-frontend-klwdw.ondigitalocean.app/oauth-callback?token={jwt}";
             return Redirect(redirectUrl);
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<ActionResult> Me()
+        {
+            var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(providerId))
+                return StatusCode(401);
+
+            return Ok();
         }
     }
 }
