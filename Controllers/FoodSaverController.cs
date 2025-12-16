@@ -45,7 +45,7 @@ namespace FoodSaver.Controllers
         }
 
         [HttpGet("GetFoodItemsByUserProviderId")]
-        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetUserByProviderId()
+        public async Task<ActionResult<List<FoodItemsReadAndUpdateDto>>> GetFoodItemsByUserProviderId()
         {
             var providerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null)
@@ -53,7 +53,7 @@ namespace FoodSaver.Controllers
                 _logger.LogError("[FoodSaverController], Unable to get provider Id from generated token");
                 return StatusCode(400);
             }
-            var foodItems = await _foodSaverService.GetUserByProviderId(providerId);
+            var foodItems = await _foodSaverService.GetFoodItemsByUserProviderId(providerId);
             if (foodItems.Count == 0)
             {
                 _logger.LogInformation("User hasn't added food Items");

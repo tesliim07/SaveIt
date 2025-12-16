@@ -62,7 +62,7 @@ namespace FoodSaver.Services
             return dtoList;
         }
 
-        public async Task<List<FoodItemsReadAndUpdateDto>> GetUserByProviderId(string providerId){
+        public async Task<List<FoodItemsReadAndUpdateDto>> GetFoodItemsByUserProviderId(string providerId){
             var user = await _usersService.GetUserByProviderId(providerId);
             if (user == null)
             {
